@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="card">
+  <h2>Upload Document</h2>
+  <form action="/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" required />
+    <button type="submit">Upload</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Recent Documents</h2>
+  {% if docs %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Filename</th>
+        <th>Status</th>
+        <th>Uploaded</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for d in docs %}
+      <tr>
+        <td class="mono">{{ d.id[:8] }}</td>
+        <td>{{ d.filename }}</td>
+        <td><span class="status {{ d.status }}">{{ d.status }}</span></td>
+        <td>{{ d.uploaded_at }}</td>
+        <td><a class="btn" href="/documents/{{ d.id }}">View</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>No documents yet. Upload a PDF or image to get started.</p>
+  {% endif %}
+</section>
+{% endblock %}

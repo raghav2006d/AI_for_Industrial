@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Emissions Report {{ document.id }}</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 2rem; }
+    h1, h2 { margin: 0.2rem 0; }
+    .section { margin: 1.2rem 0; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 0.5rem; text-align: left; }
+    th { background: #f7f7f7; }
+    code { white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Audit Report</h1>
+  <p><strong>Document:</strong> {{ document.filename }} ({{ document.id }})</p>
+  <p><strong>Uploaded:</strong> {{ document.uploaded_at }}</p>
+
+  <div class="section">
+    <h2>Summary</h2>
+    <p><strong>Scope 2 (location-based):</strong> {{ '%.3f'|format(emissions.scope2_location_based_kg) }} kg CO2e</p>
+  </div>
+
+  <div class="section">
+    <h2>Extracted Fields</h2>
+    <table>
+      <tbody>
+      {% for k, v in fields.items() %}
+        <tr><th>{{ k }}</th><td>{{ v }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Validation Flags</h2>
+    {% if flags %}
+    <table>
+      <thead><tr><th>Severity</th><th>Message</th><th>Field</th><th>Value</th></tr></thead>
+      <tbody>
+      {% for f in flags %}
+        <tr>
+          <td>{{ f.severity }}</td>
+          <td>{{ f.message }}</td>
+          <td>{{ f.field or '' }}</td>
+          <td>{{ f.value if 'value' in f else '' }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p>No issues detected.</p>
+    {% endif %}
+  </div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="card">
+  <h2>Document</h2>
+  <dl class="grid">
+    <dt>ID</dt><dd class="mono">{{ doc.id }}</dd>
+    <dt>Filename</dt><dd>{{ doc.filename }}</dd>
+    <dt>Status</dt><dd><span class="status {{ doc.status }}">{{ doc.status }}</span></dd>
+    <dt>Uploaded</dt><dd>{{ doc.uploaded_at }}</dd>
+    <dt>Processed</dt><dd>{{ doc.processed_at or '-' }}</dd>
+    {% if doc.error_message %}<dt>Error</dt><dd class="error">{{ doc.error_message }}</dd>{% endif %}
+  </dl>
+</section>
+
+{% if doc.status == 'completed' %}
+<section class="card">
+  <h3>Extracted Fields</h3>
+  <pre>{{ doc.extraction | tojson(indent=2) }}</pre>
+</section>
+
+<section class="card">
+  <h3>Emissions</h3>
+  <pre>{{ doc.emissions | tojson(indent=2) }}</pre>
+</section>
+
+<section class="card">
+  <h3>Validation Flags</h3>
+  <pre>{{ doc.flags | tojson(indent=2) }}</pre>
+</section>
+
+<section class="card">
+  <h3>Reports</h3>
+  <ul>
+    {% if doc.report_html_path %}<li><a class="btn" href="/reports/{{ doc.id }}/html">Download HTML Report</a></li>{% endif %}
+    {% if doc.report_xlsx_path %}<li><a class="btn" href="/reports/{{ doc.id }}/xlsx">Download Excel Report</a></li>{% endif %}
+  </ul>
+</section>
+{% endif %}
+
+{% endblock %}
